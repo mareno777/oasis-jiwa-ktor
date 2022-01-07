@@ -14,5 +14,5 @@ interface UserRepository {
 
     suspend fun updateUser(phoneNumber: String, updateUserRequest: UpdateUserRequest): UserResponse
 
-    suspend fun deleteUser(phoneNumber: String): String
+    suspend fun deleteUser(phoneNumber: String)
 }

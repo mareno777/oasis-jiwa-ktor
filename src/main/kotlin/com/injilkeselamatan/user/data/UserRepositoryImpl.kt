@@ -10,7 +10,6 @@ import org.litote.kmongo.or
 import org.litote.kmongo.set
 import org.litote.kmongo.setTo
 
-
 class UserRepositoryImpl(private val db: CoroutineDatabase) : UserRepository {
     override suspend fun getAllUsers(): List<UserResponse> {
         return db.getCollection<UserResponse>("users")
@@ -52,7 +51,10 @@ class UserRepositoryImpl(private val db: CoroutineDatabase) : UserRepository {
         return updateUserRequest.toUserResponse(result._id, result.createdAt)
     }
 
-    override suspend fun deleteUser(phoneNumber: String): String {
-        TODO("Not yet implemented")
+    override suspend fun deleteUser(phoneNumber: String) {
+        db.getCollection<UserResponse>("users")
+            .findOneAndDelete(
+                filter = UserResponse::phoneNumber eq phoneNumber,
+            ) ?: throw NoSuchElementException("Users not found!")
     }
 }

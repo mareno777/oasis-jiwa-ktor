@@ -21,14 +21,14 @@ fun Routing.userRouting() {
             val httpStatus = HttpStatusCode.OK
             call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
         }
-        // get by user Id
+        // get user by phone number
         get("{phoneNumber}") {
             val phoneNumber = call.parameters["phoneNumber"] ?: return@get
             val response = userRepository.getUserByPhoneNumber(phoneNumber)
             val httpStatus = HttpStatusCode.OK
             call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
         }
-        // create new user
+        // create a new user
         post() {
             val createUserRequest = call.receive<CreateUserRequest>()
             val response = userRepository.createUser(createUserRequest)
@@ -43,9 +43,15 @@ fun Routing.userRouting() {
             val httpStatus = HttpStatusCode.OK
             call.respond(httpStatus, WebResponse(httpStatus.value, response, "User successfully updated"))
         }
-        // delete current user by Id
-        delete {
-
+        // delete current user by phone number
+        delete("/{phoneNumber}") {
+            val phoneNumber = call.parameters["phoneNumber"] ?: throw IllegalArgumentException("Phone number is blank!")
+            userRepository.deleteUser(phoneNumber)
+            val httpStatus = HttpStatusCode.OK
+            call.respond(
+                httpStatus,
+                WebResponse(httpStatus.value, "", "User successfully deleted")
+            )
         }
     }
 }
