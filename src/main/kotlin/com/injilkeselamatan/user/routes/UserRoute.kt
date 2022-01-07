@@ -29,7 +29,7 @@ fun Routing.userRouting() {
             call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
         }
         // create a new user
-        post() {
+        post {
             val createUserRequest = call.receive<CreateUserRequest>()
             val response = userRepository.createUser(createUserRequest)
             val httpStatus = HttpStatusCode.Created
