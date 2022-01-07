@@ -7,3 +7,13 @@ Accept: application/json
   "name": "Samuel Mareno",
   "phoneNumber": "08174991603"
 }
+###
+PUT http://0.0.0.0:8080/users/08174991603
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "samuelmareno777@gmail.com",
+  "name": "Mareno Samuel",
+  "phoneNumber": "08174991603"
+}

@@ -1,8 +1,9 @@
-package com.injilkeselamatan.routes
+package com.injilkeselamatan.user.routes
 
-import com.injilkeselamatan.data.UserRepository
-import com.injilkeselamatan.data.models.CreateUserRequest
-import com.injilkeselamatan.data.models.WebResponse
+import com.injilkeselamatan.user.data.UserRepository
+import com.injilkeselamatan.user.data.models.CreateUserRequest
+import com.injilkeselamatan.user.data.models.UpdateUserRequest
+import com.injilkeselamatan.user.data.models.WebResponse
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -34,9 +35,13 @@ fun Routing.userRouting() {
             val httpStatus = HttpStatusCode.Created
             call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
         }
-        // update current user by Id
-        put {
-
+        // update current user by phone number
+        put("/{phoneNumber}") {
+            val updateUserRequest = call.receive<UpdateUserRequest>()
+            val phoneNumber = call.parameters["phoneNumber"] ?: throw IllegalArgumentException("Phone number is blank!")
+            val response = userRepository.updateUser(phoneNumber, updateUserRequest)
+            val httpStatus = HttpStatusCode.OK
+            call.respond(httpStatus, WebResponse(httpStatus.value, response, "User successfully updated"))
         }
         // delete current user by Id
         delete {

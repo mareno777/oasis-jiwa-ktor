@@ -1,6 +1,6 @@
 package com.injilkeselamatan.plugins
 
-import com.injilkeselamatan.routes.userRouting
+import com.injilkeselamatan.user.routes.userRouting
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*

@@ -1,4 +1,4 @@
-package com.injilkeselamatan.data.models
+package com.injilkeselamatan.user.data.models
 
 import kotlinx.serialization.Serializable
 
@@ -6,16 +6,17 @@ import kotlinx.serialization.Serializable
 data class UpdateUserRequest(
     val email: String,
     val name: String,
-    val phoneNumber: String
+    val phoneNumber: String,
+    val updatedAt: Long = System.currentTimeMillis()
 ) {
-    fun toUserResponse(userId: String): UserResponse {
+    fun toUserResponse(userId: String, createdAt: Long?): UserResponse {
         return UserResponse(
             _id = userId,
             email = email,
             phoneNumber = phoneNumber,
             name = name,
-            createdAt = null,
-            updatedAt = System.currentTimeMillis()
+            createdAt = createdAt,
+            updatedAt = updatedAt
         )
     }
 }

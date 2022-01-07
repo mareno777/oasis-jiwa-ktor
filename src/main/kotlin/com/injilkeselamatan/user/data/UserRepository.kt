@@ -1,8 +1,8 @@
-package com.injilkeselamatan.data
+package com.injilkeselamatan.user.data
 
-import com.injilkeselamatan.data.models.CreateUserRequest
-import com.injilkeselamatan.data.models.UpdateUserRequest
-import com.injilkeselamatan.data.models.UserResponse
+import com.injilkeselamatan.user.data.models.CreateUserRequest
+import com.injilkeselamatan.user.data.models.UpdateUserRequest
+import com.injilkeselamatan.user.data.models.UserResponse
 
 interface UserRepository {
 

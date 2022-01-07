@@ -1,7 +1,7 @@
 package com.injilkeselamatan.plugins
 
-import com.injilkeselamatan.data.models.UserResponse
-import com.injilkeselamatan.data.models.WebResponse
+import com.injilkeselamatan.user.data.models.UserResponse
+import com.injilkeselamatan.user.data.models.WebResponse
 import com.injilkeselamatan.helper.OperationsException
 import com.injilkeselamatan.helper.UserAlreadyExists
 import io.ktor.application.*
