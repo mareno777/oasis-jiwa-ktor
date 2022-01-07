@@ -1,9 +1,9 @@
 package com.injilkeselamatan.plugins
 
 import com.injilkeselamatan.user.data.models.UserResponse
-import com.injilkeselamatan.user.data.models.WebResponse
+import com.injilkeselamatan.helper.WebResponse
 import com.injilkeselamatan.helper.OperationsException
-import com.injilkeselamatan.helper.UserAlreadyExists
+import com.injilkeselamatan.helper.ResourceAlreadyExists
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -13,7 +13,7 @@ import io.ktor.routing.*
 fun Application.configureStatusPages() {
     routing {
         install(StatusPages) {
-            exception<UserAlreadyExists> { cause ->
+            exception<ResourceAlreadyExists> { cause ->
                 val httpStatusCode = HttpStatusCode.MethodNotAllowed
                 call.respond(
                     httpStatusCode, WebResponse(

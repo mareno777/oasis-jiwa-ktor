@@ -1,4 +1,4 @@
-package com.injilkeselamatan.user.data.models
+package com.injilkeselamatan.helper
 
 import kotlinx.serialization.Serializable
 

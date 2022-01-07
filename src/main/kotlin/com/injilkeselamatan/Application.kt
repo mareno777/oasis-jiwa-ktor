@@ -1,17 +1,16 @@
 package com.injilkeselamatan
 
+import com.injilkeselamatan.audio.routes.audioRouting
 import com.injilkeselamatan.di.mainModule
 import com.injilkeselamatan.plugins.configureMonitoring
 import com.injilkeselamatan.plugins.configureRouting
 import com.injilkeselamatan.plugins.configureSerialization
 import com.injilkeselamatan.plugins.configureStatusPages
 import io.ktor.application.*
-import io.ktor.application.*
 import org.koin.ktor.ext.Koin
-import org.koin.ktor.ext.modules
 
 
-fun main(args: Array<String>): Unit {
+fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
 }
 
@@ -27,5 +26,5 @@ fun Application.user() {
 }
 
 fun Application.audio() {
-
+    audioRouting()
 }

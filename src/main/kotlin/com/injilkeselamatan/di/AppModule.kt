@@ -1,5 +1,7 @@
 package com.injilkeselamatan.di
 
+import com.injilkeselamatan.audio.data.AudioRepository
+import com.injilkeselamatan.audio.data.AudioRepositoryImpl
 import com.injilkeselamatan.user.data.UserRepository
 import com.injilkeselamatan.user.data.UserRepositoryImpl
 import org.koin.dsl.module
@@ -14,4 +16,5 @@ val mainModule = module {
     }
 
     single<UserRepository> { UserRepositoryImpl(get()) }
+    single<AudioRepository> { AudioRepositoryImpl(get()) }
 }

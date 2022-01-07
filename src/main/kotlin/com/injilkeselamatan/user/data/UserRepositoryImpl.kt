@@ -1,6 +1,7 @@
 package com.injilkeselamatan.user.data
 
-import com.injilkeselamatan.helper.UserAlreadyExists
+import com.injilkeselamatan.helper.OperationsException
+import com.injilkeselamatan.helper.ResourceAlreadyExists
 import com.injilkeselamatan.user.data.models.CreateUserRequest
 import com.injilkeselamatan.user.data.models.UpdateUserRequest
 import com.injilkeselamatan.user.data.models.UserResponse
@@ -10,7 +11,7 @@ import org.litote.kmongo.or
 import org.litote.kmongo.set
 import org.litote.kmongo.setTo
 
-class UserRepositoryImpl(private val db: CoroutineDatabase) : UserRepository {
+class UserRepositoryImpl(private val db: CoroutineDatabase) :  UserRepository {
     override suspend fun getAllUsers(): List<UserResponse> {
         return db.getCollection<UserResponse>("users")
             .find()
@@ -31,10 +32,11 @@ class UserRepositoryImpl(private val db: CoroutineDatabase) : UserRepository {
                     UserResponse::phoneNumber eq createUserRequest.phoneNumber
                 )
             )
-        if (existedUser != null) throw UserAlreadyExists("User already exists!")
-        val successful = db.getCollection<CreateUserRequest>("users").insertOne(createUserRequest).wasAcknowledged()
+        if (existedUser != null) throw ResourceAlreadyExists("User already exists!")
+        val successful = db.getCollection<CreateUserRequest>("users")
+            .insertOne(createUserRequest).wasAcknowledged()
         if (successful) return createUserRequest.toUserResponse()
-        throw UserAlreadyExists()
+        throw OperationsException()
     }
 
     override suspend fun updateUser(phoneNumber: String, updateUserRequest: UpdateUserRequest): UserResponse {

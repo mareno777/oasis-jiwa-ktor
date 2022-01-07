@@ -11,5 +11,6 @@ data class UserResponse(
     val name: String,
     val phoneNumber: String,
     val createdAt: Long?,
-    val updatedAt: Long?
+    val updatedAt: Long?,
+    val playlist: List<String>? = null
 )
