@@ -6,20 +6,26 @@ import kotlinx.serialization.Serializable
 data class UpdateAudioRequest(
     val title: String,
     val artist: String,
+    val album: String,
     val songUrl: String,
     val imageUrl: String,
     val description: String?,
-    val synopsis: String?
+    val synopsis: String?,
+    val duration: Long,
+    val uploadedAt: Long
 ) {
     fun toAudioResponse(mediaId: String): AudioResponse {
         return AudioResponse(
             mediaId = mediaId,
             title = title,
             artist = artist,
+            album = album,
             songUrl = songUrl,
             imageUrl = imageUrl,
             description = description,
-            synopsis = synopsis
+            synopsis = synopsis,
+            duration = duration,
+            uploadedAt = uploadedAt
         )
     }
 }

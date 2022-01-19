@@ -13,7 +13,11 @@ data class CreateUserRequest(
     val name: String,
     val phoneNumber: String,
     val createdAt: Long = System.currentTimeMillis(),
-    val updatedAt: Long? = null
+    val updatedAt: Long? = null,
+    val ipAddress: String,
+    val lastLogin: Long,
+    val model: String,
+    val profile: String
 ) {
     fun toUserResponse(): UserResponse {
         return UserResponse(
@@ -22,7 +26,11 @@ data class CreateUserRequest(
             name = name,
             phoneNumber = phoneNumber,
             createdAt = createdAt,
-            updatedAt = updatedAt
+            updatedAt = updatedAt,
+            ipAddress = ipAddress,
+            lastLogin = lastLogin,
+            model = model,
+            profile = profile
         )
     }
 }

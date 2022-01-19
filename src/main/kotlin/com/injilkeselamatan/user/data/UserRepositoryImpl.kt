@@ -19,8 +19,8 @@ class UserRepositoryImpl(private val db: CoroutineDatabase) :  UserRepository {
             .toList()
     }
 
-    override suspend fun getUserByPhoneNumber(phoneNumber: String): UserResponse {
-        return db.getCollection<UserResponse>("users").findOne(filter = "{phoneNumber: '$phoneNumber'}")
+    override suspend fun getUserByEmail(email: String): UserResponse {
+        return db.getCollection<UserResponse>("users").findOne(filter = "{email: '$email'}")
             ?: throw NoSuchElementException("User doesn't exists")
     }
 
@@ -39,24 +39,28 @@ class UserRepositoryImpl(private val db: CoroutineDatabase) :  UserRepository {
         throw OperationsException()
     }
 
-    override suspend fun updateUser(phoneNumber: String, updateUserRequest: UpdateUserRequest): UserResponse {
+    override suspend fun updateUser(email: String, updateUserRequest: UpdateUserRequest): UserResponse {
         val result = db.getCollection<UserResponse>("users")
             .findOneAndUpdate(
-                filter = UserResponse::phoneNumber eq phoneNumber,
+                filter = UserResponse::email eq email,
                 set(
                     UserResponse::name setTo updateUserRequest.name,
                     UserResponse::email setTo updateUserRequest.email,
                     UserResponse::updatedAt setTo updateUserRequest.updatedAt,
                     UserResponse::phoneNumber setTo updateUserRequest.phoneNumber,
+                    UserResponse::ipAddress setTo updateUserRequest.ipAddress,
+                    UserResponse::lastLogin setTo updateUserRequest.lastLogin,
+                    UserResponse::model setTo updateUserRequest.model,
+                    UserResponse::profile setTo updateUserRequest.profile
                 )
             ) ?: throw NoSuchElementException("User not found!")
         return updateUserRequest.toUserResponse(result._id, result.createdAt)
     }
 
-    override suspend fun deleteUser(phoneNumber: String) {
+    override suspend fun deleteUser(email: String) {
         db.getCollection<UserResponse>("users")
             .findOneAndDelete(
-                filter = UserResponse::phoneNumber eq phoneNumber,
+                filter = UserResponse::email eq email,
             ) ?: throw NoSuchElementException("Users not found!")
     }
 }

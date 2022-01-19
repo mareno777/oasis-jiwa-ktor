@@ -25,6 +25,7 @@ fun Application.user() {
     configureStatusPages()
 }
 
+@Suppress("unused")
 fun Application.audio() {
     audioRouting()
 }

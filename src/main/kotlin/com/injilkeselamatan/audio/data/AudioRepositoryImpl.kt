@@ -44,13 +44,23 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
         val result = db.getCollection<AudioResponse>("audio")
             .findOneAndUpdate(
                 filter = AudioResponse::mediaId eq mediaId,
-                set(
+                update = if (updateAudioRequest.description == null) set(
+                    AudioResponse::title setTo updateAudioRequest.title,
+                    AudioResponse::artist setTo updateAudioRequest.artist,
+                    AudioResponse::songUrl setTo updateAudioRequest.songUrl,
+                    AudioResponse::imageUrl setTo updateAudioRequest.imageUrl,
+                    AudioResponse::synopsis setTo updateAudioRequest.synopsis,
+                    AudioResponse::duration setTo updateAudioRequest.duration,
+                    AudioResponse::uploadedAt setTo updateAudioRequest.uploadedAt
+                ) else set(
                     AudioResponse::title setTo updateAudioRequest.title,
                     AudioResponse::artist setTo updateAudioRequest.artist,
                     AudioResponse::songUrl setTo updateAudioRequest.songUrl,
                     AudioResponse::imageUrl setTo updateAudioRequest.imageUrl,
                     AudioResponse::description setTo updateAudioRequest.description,
                     AudioResponse::synopsis setTo updateAudioRequest.synopsis,
+                    AudioResponse::duration setTo updateAudioRequest.duration,
+                    AudioResponse::uploadedAt setTo updateAudioRequest.uploadedAt
                 )
             ) ?: throw NoSuchElementException("Audio not found!")
         return updateAudioRequest.toAudioResponse(result.mediaId)

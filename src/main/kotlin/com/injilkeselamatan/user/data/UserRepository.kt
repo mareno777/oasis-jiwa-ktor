@@ -8,11 +8,11 @@ interface UserRepository {
 
     suspend fun getAllUsers(): List<UserResponse>
 
-    suspend fun getUserByPhoneNumber(phoneNumber: String): UserResponse
+    suspend fun getUserByEmail(email: String): UserResponse
 
     suspend fun createUser(createUserRequest: CreateUserRequest): UserResponse
 
-    suspend fun updateUser(phoneNumber: String, updateUserRequest: UpdateUserRequest): UserResponse
+    suspend fun updateUser(email: String, updateUserRequest: UpdateUserRequest): UserResponse
 
-    suspend fun deleteUser(phoneNumber: String)
+    suspend fun deleteUser(email: String)
 }
