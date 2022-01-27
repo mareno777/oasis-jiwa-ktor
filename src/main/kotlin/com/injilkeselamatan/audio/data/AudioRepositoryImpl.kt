@@ -113,13 +113,15 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
     }
 
     private fun convertTimeWithHour(time: Long): String {
-        val date = Date(time)
+        val timezoneIndonesia = time + 25_200_000
+        val date = Date(timezoneIndonesia)
         val format: Format = SimpleDateFormat("dd MMMM yyyy HH:mm:ss")
         return format.format(date)
     }
 
     private fun convertTime(time: Long): String {
-        val date = Date(time)
+        val timezoneIndonesia = time + 25_200_000
+        val date = Date(timezoneIndonesia)
         val format: Format = SimpleDateFormat("dd MMMM yyyy")
         return format.format(date)
     }
