@@ -1,3 +1,3 @@
 package com.injilkeselamatan.helper
 
-class OperationsException : Throwable()
+class OperationsException(message: String? = null) : Throwable(message)

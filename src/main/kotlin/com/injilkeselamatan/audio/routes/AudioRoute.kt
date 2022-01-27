@@ -50,6 +50,18 @@ fun Application.audioRouting() {
                     WebResponse(httpStatus.value, "", "Audio successfully deleted")
                 )
             }
+
+            get("featured") {
+                val response = audioRepository.getFeaturedAudio()
+                val httpStatus = HttpStatusCode.OK
+                call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
+            }
+
+            post("featured") {
+                val response = audioRepository.setFeaturedAudio()
+                val httpStatus = HttpStatusCode.Created
+                call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
+            }
         }
     }
 }

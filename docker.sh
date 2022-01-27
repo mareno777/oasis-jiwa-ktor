@@ -13,3 +13,5 @@ docker pull mareno/oasis-jiwa-ktor:0.0.1
 docker container create --name oasis-jiwa -p 8080:8080 mareno/oasis-jiwa-ktor:0.0.1
 network create myNetwork
 docker network connect myNetwork oasis-jiwa
+
+db.audio.find( {$text: { $search: "\"anak\""}})

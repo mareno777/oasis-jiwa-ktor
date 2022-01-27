@@ -34,7 +34,6 @@ fun Routing.userRouting() {
             var createUserRequest = call.receive<CreateUserRequest>()
             createUserRequest = createUserRequest.copy(
                 createdAt = System.currentTimeMillis(),
-                ipAddress = call.request.origin.remoteHost,
                 lastLogin = System.currentTimeMillis()
             )
 

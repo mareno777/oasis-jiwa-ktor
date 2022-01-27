@@ -2,14 +2,17 @@ package com.injilkeselamatan.audio.data
 
 import com.injilkeselamatan.audio.data.models.AudioResponse
 import com.injilkeselamatan.audio.data.models.CreateAudioRequest
+import com.injilkeselamatan.audio.data.models.FeaturedAudioResponse
 import com.injilkeselamatan.audio.data.models.UpdateAudioRequest
 import com.injilkeselamatan.helper.OperationsException
 import com.injilkeselamatan.helper.ResourceAlreadyExists
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
-import org.litote.kmongo.or
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
+import org.litote.kmongo.coroutine.aggregate
+import java.text.Format
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
     override suspend fun getAllAudio(): List<AudioResponse> {
@@ -37,7 +40,7 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
         val successful = db.getCollection<CreateAudioRequest>("audio")
             .insertOne(createAudioRequest).wasAcknowledged()
         if (successful) return createAudioRequest.toAudioResponse()
-        throw OperationsException()
+        throw OperationsException("createAudio encounter a problem!")
     }
 
     override suspend fun updateAudio(mediaId: String, updateAudioRequest: UpdateAudioRequest): AudioResponse {
@@ -73,4 +76,51 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
             ) ?: throw NoSuchElementException("Audio not found!")
     }
 
+    override suspend fun getFeaturedAudio(): FeaturedAudioResponse {
+        return db.getCollection<FeaturedAudioResponse>("featured_audio")
+            .findOne("{displayedAt: {${MongoOperator.regex}: '${convertTime(System.currentTimeMillis())}.*'}}")
+            ?: throw NoSuchElementException("Audio doesn't exists")
+    }
+
+    override suspend fun setFeaturedAudio(): FeaturedAudioResponse {
+        var done: Boolean
+        var featuredAudio: FeaturedAudioResponse?
+
+        do {
+            val randomAudio = db.getCollection<AudioResponse>("audio")
+                .aggregate<AudioResponse>("[{ ${MongoOperator.sample}: { size: 1 } }]")
+                .first() ?: throw NoSuchElementException("Audio doesn't exists")
+
+            featuredAudio = FeaturedAudioResponse(
+                mediaId = randomAudio.mediaId,
+                title = randomAudio.title,
+                album = randomAudio.album,
+                artist = randomAudio.artist,
+                imageUrl = randomAudio.imageUrl,
+                songUrl = randomAudio.songUrl,
+                description = randomAudio.description,
+                synopsis = randomAudio.synopsis,
+                duration = randomAudio.duration,
+                uploadedAt = randomAudio.uploadedAt,
+                displayedAt = convertTimeWithHour(System.currentTimeMillis())
+            )
+
+            done = db.getCollection<FeaturedAudioResponse>("featured_audio")
+                .insertOne(featuredAudio)
+                .wasAcknowledged()
+        } while (!done)
+        return featuredAudio ?: throw OperationsException("setFeaturedAudio encounter a problem!")
+    }
+
+    private fun convertTimeWithHour(time: Long): String {
+        val date = Date(time)
+        val format: Format = SimpleDateFormat("dd MMMM yyyy HH:mm:ss")
+        return format.format(date)
+    }
+
+    private fun convertTime(time: Long): String {
+        val date = Date(time)
+        val format: Format = SimpleDateFormat("dd MMMM yyyy")
+        return format.format(date)
+    }
 }
