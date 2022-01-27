@@ -11,7 +11,7 @@ import org.litote.kmongo.or
 import org.litote.kmongo.set
 import org.litote.kmongo.setTo
 
-class UserRepositoryImpl(private val db: CoroutineDatabase) :  UserRepository {
+class UserRepositoryImpl(private val db: CoroutineDatabase) : UserRepository {
     override suspend fun getAllUsers(): List<UserResponse> {
         return db.getCollection<UserResponse>("users")
             .find()

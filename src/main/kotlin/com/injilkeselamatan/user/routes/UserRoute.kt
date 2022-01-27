@@ -1,11 +1,10 @@
 package com.injilkeselamatan.user.routes
 
+import com.injilkeselamatan.helper.WebResponse
 import com.injilkeselamatan.user.data.UserRepository
 import com.injilkeselamatan.user.data.models.CreateUserRequest
 import com.injilkeselamatan.user.data.models.UpdateUserRequest
-import com.injilkeselamatan.helper.WebResponse
 import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
