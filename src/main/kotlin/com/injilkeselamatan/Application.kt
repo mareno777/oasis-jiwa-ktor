@@ -6,6 +6,7 @@ import com.injilkeselamatan.plugins.configureMonitoring
 import com.injilkeselamatan.plugins.configureRouting
 import com.injilkeselamatan.plugins.configureSerialization
 import com.injilkeselamatan.plugins.configureStatusPages
+import com.injilkeselamatan.version.routes.versionRouting
 import io.ktor.application.*
 import org.koin.ktor.ext.Koin
 
@@ -25,7 +26,10 @@ fun Application.user() {
     configureStatusPages()
 }
 
-@Suppress("unused")
 fun Application.audio() {
     audioRouting()
+}
+
+fun Application.version() {
+    versionRouting()
 }
