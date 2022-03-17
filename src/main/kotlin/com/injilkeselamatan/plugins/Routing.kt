@@ -10,7 +10,7 @@ fun Application.configureRouting() {
     routing() {
         route("/") {
             get {
-                call.respondRedirect("https://injilkeselamatan.com")
+                call.respond("Hello World")
             }
         }
         userRouting()
