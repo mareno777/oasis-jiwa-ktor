@@ -13,7 +13,7 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 val mainModule = module {
     single {
-        KMongo.createClient(ConnectionString("mongodb://localhost:1234"))
+        KMongo.createClient(ConnectionString("mongodb://mongoserver"))
             .coroutine
             .getDatabase("oasis_jiwa_db")
     }

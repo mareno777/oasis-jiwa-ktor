@@ -1,5 +1,5 @@
 ./gradlew shadowJar
-docker buildx build --platform linux/amd64,linux/arm64 -t mareno/oasis-jiwa-ktor:0.0.2 --push .
+docker build -t oasis-jiwa-ktor:0.0.2
 
 cd /users/reno/belajar/aws
 
@@ -10,6 +10,6 @@ docker container rm oasis-jiwa
 docker container ls -all
 docker image rm mareno/oasis-jiwa-ktor:0.0.2
 docker pull mareno/oasis-jiwa-ktor:0.0.2
-docker container create --name oasis-jiwa -p 8080:8080 -p 8443:8443 mareno/oasis-jiwa-ktor:0.0.2
+docker container create --name oasis-jiwa -p 8080:8080 -p 8443:8443 oasis-jiwa-ktor:0.0.2
 docker network create myNetwork
-docker network connect myNetwork oasis-jiwa7
+docker network connect myNetwork oasis-jiwa
