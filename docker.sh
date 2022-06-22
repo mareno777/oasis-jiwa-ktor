@@ -10,7 +10,7 @@ docker container rm oasis-jiwa
 docker container ls -all
 docker image rm mareno/oasis-jiwa-ktor:0.0.2
 docker pull mareno/oasis-jiwa-ktor:0.0.2
-docker container create --name oasis-jiwa -p 8080:8080 mareno/oasis-jiwa-ktor:0.0.2
+docker container create --name oasis-jiwa -p 8080:8080 -p 8443:8443 mareno/oasis-jiwa-ktor:0.0.2
 docker network create myNetwork
 docker network connect myNetwork oasis-jiwa
 docker container start oasis-jiwa
