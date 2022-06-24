@@ -83,7 +83,7 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
     }
 
     override suspend fun setFeaturedAudio(): FeaturedAudioResponse {
-        var done: Boolean
+        var done: Boolean = false
         var featuredAudio: FeaturedAudioResponse?
 
         do {
