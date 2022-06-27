@@ -13,3 +13,5 @@ docker pull mareno/oasis-jiwa-ktor:0.0.2
 docker container create --name oasis-jiwa -p 8080:8080 -p 8443:8443 oasis-jiwa-ktor:0.0.2
 docker network create myNetwork
 docker network connect myNetwork oasis-jiwa
+
+docker container create --name mongovolume --publish 27019:27017 --mount "type=volume,source=mongodata,destination=/data/db" --env MONGO_INITDB_ROOT_USERNAME=reno --env MONGO_INITDB_ROOT_PASSWORD=reno mongo:latest
