@@ -13,7 +13,9 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 val mainModule = module {
     single {
-        KMongo.createClient(ConnectionString("mongodb://reno:reno@mongoserver"))
+        val username = System.getenv("MONGO_USERNAME")
+        val password = System.getenv("MONGO_PASSWORD")
+        KMongo.createClient(ConnectionString("mongodb://$username:$password@mongoserver"))
             .coroutine
             .getDatabase("oasis_jiwa_db")
     }
