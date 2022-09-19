@@ -20,4 +20,4 @@ services:
       MONGO_USERNAME: houseoflife
       MONGO_PASSWORD: jki1NJ1l
     volumes:
-      - /opt/oasis-jiwa/app:/app
+      - /home/ubuntu/oasis-jiwa/app:/app
