@@ -1,4 +1,4 @@
-version: 1.0
+version: "1.0"
 services:
   mongoserver:
     image: mongo
@@ -8,6 +8,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: jki1NJ1l
     ports:
       - 1234:27017
+    volumes:
+      - /opt/oasis-jiwa/mongo-data:/data/db
 
   oasis-jiwa:
     build: .
@@ -18,4 +20,4 @@ services:
       MONGO_USERNAME: houseoflife
       MONGO_PASSWORD: jki1NJ1l
     volumes:
-      - /app:/root/app
+      - /opt/oasis-jiwa/app:/app
