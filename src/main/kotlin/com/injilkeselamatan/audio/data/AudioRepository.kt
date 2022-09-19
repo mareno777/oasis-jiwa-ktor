@@ -9,7 +9,7 @@ interface AudioRepository {
 
     suspend fun getAllAudio(): List<AudioResponse>
 
-    suspend fun getAudio(mediaId: String): AudioResponse
+    suspend fun getLatestMediaId(album: String): String
 
     suspend fun createAudio(createAudioRequest: CreateAudioRequest): AudioResponse
 

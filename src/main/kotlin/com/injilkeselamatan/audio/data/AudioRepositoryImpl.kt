@@ -22,9 +22,11 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
             .toList()
     }
 
-    override suspend fun getAudio(mediaId: String): AudioResponse {
-        return db.getCollection<AudioResponse>("audio").findOne(filter = "{mediaId: '$mediaId'}")
-            ?: throw NoSuchElementException("Audio doesn't exists")
+    override suspend fun getLatestMediaId(album: String): String {
+        return db.getCollection<AudioResponse>("audio")
+            .find(filter = AudioResponse::album eq album)
+            .toList()
+            .last().mediaId.filter { it.isDigit() }
     }
 
     override suspend fun createAudio(createAudioRequest: CreateAudioRequest): AudioResponse {

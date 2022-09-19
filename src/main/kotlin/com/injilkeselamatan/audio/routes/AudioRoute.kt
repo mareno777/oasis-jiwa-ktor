@@ -22,11 +22,11 @@ fun Application.audioRouting() {
                 val httpStatus = HttpStatusCode.OK
                 call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
             }
-            get("/{mediaId}") {
-                val mediaId = call.parameters["mediaId"] ?: return@get
-                val response = audioRepository.getAudio(mediaId)
+            get("/album") {
+                val album = call.request.queryParameters["album"] ?: return@get
+                val response = audioRepository.getLatestMediaId(album)
                 val httpStatus = HttpStatusCode.OK
-                call.respond(httpStatus, WebResponse(httpStatus.value, response, httpStatus.description))
+                call.respond(httpStatus, WebResponse(httpStatus.value, listOf(response), httpStatus.description))
             }
             post {
                 val createAudioRequest = call.receive<CreateAudioRequest>()

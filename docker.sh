@@ -14,4 +14,12 @@ docker container create --name oasis-jiwa -p 8080:8080 -p 8443:8443 oasis-jiwa-k
 docker network create myNetwork
 docker network connect myNetwork oasis-jiwa
 
-docker container create --name mongovolume --publish 27019:27017 --mount "type=volume,source=mongodata,destination=/data/db" --env MONGO_INITDB_ROOT_USERNAME=reno --env MONGO_INITDB_ROOT_PASSWORD=reno mongo:latest
+docker container create --name mongoserver --publish 1234:27017 --mount "type=bind,source=/root/mongo-data,destination=/data/db" --env MONGO_INITDB_ROOT_USERNAME=reno --env MONGO_INITDB_ROOT_PASSWORD=reno mongo:latest
+
+docker container create --name mongoserver --publish 1234:27017 --mount "type=volume,source=mongorestore,destination=/data/db" --env MONGO_INITDB_ROOT_USERNAME=reno --env MONGO_INITDB_ROOT_PASSWORD=reno mongo:latest
+
+docker container run --rm --name ubuntubackup --mount "type=bind,source=/root/backup-volume-oasis-jiwa,destination=/backup" --mount "type=volume,source=mongodata,destination=/data" ubuntu:latest tar cvf /backup/backup-lagi.tar.gz /data
+tar cvf /backup/backup-lagi.tar.gz /data
+docker container run --rm --name ubunturestore --mount "type=bind,source=/root/backup-volume-oasis-jiwa,destination=/backup" --mount "type=volume,source=mongorestore,destination=/data" ubuntu:latest bash -c "cd /data && tar xvf /backup/backup-lagi.tar.gz --strip 1"
+
+docker container start mongoserver
