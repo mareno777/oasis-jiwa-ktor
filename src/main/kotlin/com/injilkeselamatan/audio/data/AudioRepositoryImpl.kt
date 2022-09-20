@@ -9,10 +9,10 @@ import com.injilkeselamatan.helper.ResourceAlreadyExists
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.aggregate
-import java.text.Format
+import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.ZoneId
 import java.util.*
-
 
 class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
     override suspend fun getAllAudio(): List<AudioResponse> {
@@ -22,26 +22,24 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
             .toList()
     }
 
-    override suspend fun getLatestMediaId(album: String): String {
-        return db.getCollection<AudioResponse>("audio")
-            .find(filter = AudioResponse::album eq album)
-            .toList()
-            .last().mediaId.filter { it.isDigit() }
-    }
-
     override suspend fun createAudio(createAudioRequest: CreateAudioRequest): AudioResponse {
+        val assignedMediaId = getLatestMediaId(createAudioRequest.album) + 3
+        val assignedCreateAudioRequest =
+            createAudioRequest.copy(mediaId = "media_${String.format("%04d", assignedMediaId)}") // Zero Leading in 4 digits
+
         val existedAudio = db.getCollection<AudioResponse>("audio")
             .findOne(
                 or(
-                    AudioResponse::mediaId eq createAudioRequest.mediaId,
-                    AudioResponse::title eq createAudioRequest.title,
-                    AudioResponse::songUrl eq createAudioRequest.songUrl
+                    AudioResponse::mediaId eq assignedCreateAudioRequest.mediaId,
+                    AudioResponse::title eq assignedCreateAudioRequest.title,
+                    AudioResponse::songUrl eq assignedCreateAudioRequest.songUrl
                 )
             )
         if (existedAudio != null) throw ResourceAlreadyExists("Audio already exists!")
+
         val successful = db.getCollection<CreateAudioRequest>("audio")
-            .insertOne(createAudioRequest).wasAcknowledged()
-        if (successful) return createAudioRequest.toAudioResponse()
+            .insertOne(assignedCreateAudioRequest).wasAcknowledged()
+        if (successful) return assignedCreateAudioRequest.toAudioResponse()
         throw OperationsException("createAudio encounter a problem!")
     }
 
@@ -80,12 +78,12 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
 
     override suspend fun getFeaturedAudio(): FeaturedAudioResponse {
         return db.getCollection<FeaturedAudioResponse>("featured_audio")
-            .findOne("{displayedAt: {${MongoOperator.regex}: '${convertTime(System.currentTimeMillis())}.*'}}")
+            .findOne(filter = FeaturedAudioResponse::displayedAt eq convertTime(System.currentTimeMillis()))
             ?: throw NoSuchElementException("Audio doesn't exists")
     }
 
     override suspend fun setFeaturedAudio(): FeaturedAudioResponse {
-        var done: Boolean = false
+        var done: Boolean
         var featuredAudio: FeaturedAudioResponse?
 
         do {
@@ -104,7 +102,7 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
                 synopsis = randomAudio.synopsis,
                 duration = randomAudio.duration,
                 uploadedAt = randomAudio.uploadedAt,
-                displayedAt = convertTimeWithHour(System.currentTimeMillis())
+                displayedAt = convertTime(System.currentTimeMillis())
             )
 
             done = db.getCollection<FeaturedAudioResponse>("featured_audio")
@@ -114,17 +112,18 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
         return featuredAudio ?: throw OperationsException("setFeaturedAudio encounter a problem!")
     }
 
-    private fun convertTimeWithHour(time: Long): String {
-        val timezoneIndonesia = time + 25_200_000
-        val date = Date(timezoneIndonesia)
-        val format: Format = SimpleDateFormat("dd MMMM yyyy HH:mm:ss")
+    private fun convertTime(time: Long): String {
+        val date = Date(time)
+        val format: DateFormat = SimpleDateFormat("dd MMMM yyyy")
+        format.timeZone = TimeZone.getTimeZone(ZoneId.of("Asia/Jakarta"))
         return format.format(date)
     }
 
-    private fun convertTime(time: Long): String {
-        val timezoneIndonesia = time + 25_200_000
-        val date = Date(timezoneIndonesia)
-        val format: Format = SimpleDateFormat("dd MMMM yyyy")
-        return format.format(date)
+    private suspend fun getLatestMediaId(album: String): Int {
+        return db.getCollection<AudioResponse>("audio")
+            .find(filter = AudioResponse::album eq album)
+            .toList()
+            .last().mediaId.filter { it.isDigit() }.toIntOrNull()
+            ?: throw NoSuchElementException("conversation media_id was failed")
     }
 }
