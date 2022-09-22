@@ -50,6 +50,7 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
                 update = if (updateAudioRequest.description == null) set(
                     AudioResponse::title setTo updateAudioRequest.title,
                     AudioResponse::artist setTo updateAudioRequest.artist,
+                    AudioResponse::album setTo updateAudioRequest.album,
                     AudioResponse::songUrl setTo updateAudioRequest.songUrl,
                     AudioResponse::imageUrl setTo updateAudioRequest.imageUrl,
                     AudioResponse::synopsis setTo updateAudioRequest.synopsis,
@@ -58,6 +59,7 @@ class AudioRepositoryImpl(private val db: CoroutineDatabase) : AudioRepository {
                 ) else set(
                     AudioResponse::title setTo updateAudioRequest.title,
                     AudioResponse::artist setTo updateAudioRequest.artist,
+                    AudioResponse::album setTo updateAudioRequest.album,
                     AudioResponse::songUrl setTo updateAudioRequest.songUrl,
                     AudioResponse::imageUrl setTo updateAudioRequest.imageUrl,
                     AudioResponse::description setTo updateAudioRequest.description,

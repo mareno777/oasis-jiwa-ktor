@@ -10,8 +10,8 @@ data class UpdateAudioRequest(
     val songUrl: String,
     val imageUrl: String,
     val description: String?,
-    val synopsis: String?,
-    val duration: Long,
+    val synopsis: String? = null,
+    val duration: Long = 0L,
     val uploadedAt: Long
 ) {
     fun toAudioResponse(mediaId: String): AudioResponse {

@@ -41,7 +41,7 @@ fun Application.audioRouting() {
                 val httpStatus = HttpStatusCode.OK
                 call.respond(
                     httpStatus,
-                    WebResponse(httpStatus.value, "", "Audio successfully deleted")
+                    WebResponse(httpStatus.value, listOf("Audio successfully deleted"), httpStatus.description)
                 )
             }
 
